@@ -5,7 +5,6 @@
 #include<vector>
 #include<fstream>
 #include"sys_header.h"
-#include"Dis_BLock.h"
 
 #define DEF_SET_CAP 256
 
@@ -19,6 +18,7 @@ public:
   enum SET_STATE{UPDATED ,ON_UPDATING, DRAWN, ON_DRAWING, NONE_TASK};
 protected:
   SET_STATE set_state = UPDATED;
+  BOOL still_rendering = TRUE;
   std::vector<T> set_vector;
 public:
 
@@ -27,6 +27,7 @@ public:
 
   void update_all(Map& game_map);
   void display_all(gs::Graphics& pg);
+  void end_display(){still_rendering = FALSE;}
 
   // TODO
   void add_set_to_map(Map& game_map);
@@ -60,24 +61,16 @@ inline void T_SET<T,r_size>::update_all(Map& game_map){
 }
 TEM_H
 inline void T_SET<T,r_size>::display_all(gs::Graphics& pg){
-  while(set_state != UPDATED) Sleep(2);
+  while(set_state != UPDATED && still_rendering) {
+    // assert(set_state == DRAWN || set_state == ON_UPDATING);
+    Sleep(2);
+    // OutputDebugStringW(L"diplay all sleep");
+  }
   set_state = ON_DRAWING;
   for(auto& it: set_vector) it.DisplayOnce(pg);
   set_state = DRAWN;
 }
-TEM_H
-inline bool T_SET<T,r_size>::begin_draw(){
-  if(set_vector.empty())  return true;
-  auto& it = set_vector.begin();
-  return it.m_block_state == DisBlock::Block_Drawn;
-}
 
-TEM_H
-inline bool T_SET<T,r_size>::begin_update(){
-  if(set_vector.empty())  return true;
-  auto& it = set_vector.begin();
-  return it.m_block_state == DisBlock::Block_updated;
-}
 
 TEM_H
 void T_SET<T,r_size>::write_to_file(const char* file_name){

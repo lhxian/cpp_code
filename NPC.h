@@ -3,7 +3,7 @@
 #include"sys_header.h"
 #include"macro.h"
 #include<vector>
-#include"Dis_BLock.h"
+// #include"Dis_BLock.h"
 #include"Updatable_Block.h"
 #include"set_template.h"
 
@@ -111,6 +111,8 @@ public:
   void prepare_move(Map& game_map);
 
   void reach_dest(Map& game_map);
+  void stop(Map& game_map);
+  bool on_walking();
 
   bool idle_find_work(Map& game_map);
 

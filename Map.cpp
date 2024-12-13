@@ -364,28 +364,34 @@ bool Map::cancel_trees(INT32 top,INT32 bottom,INT32 left,INT32 right){
 void Map::update_all(){
   // TODO
   assert(m_ptree_set);
+  if(map_update_working)
   m_ptree_set->update_all(*this);
   OutputDebugString("update tree");
   assert(m_pwall_set);
   OutputDebugString("begin update wall");
+  if(map_update_working)
   m_pwall_set->update_all(*this);
   // update_to_build_wall_list();
   OutputDebugString("update wall");
   // assert(m_pproperty_set);
   // m_pproperty_set->update_all(*this);
   assert(m_pstage_set);
+  if(map_update_working)
   m_pstage_set->update_all(*this);
   // update_to_add_stage_list();
   OutputDebugString("update stage");
   assert(m_pproperty_set);
+  if(map_update_working)
   m_pproperty_set->update_all(*this);
 
   assert(m_pnpc_set);
   // LOG("begin update all npc");
+  if(map_update_working)
   m_pnpc_set->update_all(*this);
   // LOG("update all npc");
   OutputDebugString("update npc");
   assert(m_pchicken_set);
+  if(map_update_working)
   m_pchicken_set->update_all(*this);
   OutputDebugString("update chicken");
 
@@ -406,6 +412,7 @@ void Map::end_update(){
   assert(map_update_working);
   map_update_working = FALSE;
   // WaitForSingleObject(map_update_thread_handle,INFINITE);
+  // map_update_thread_handle = 0;
   OutputDebugStringA("close the update thread");
 }
 
@@ -484,7 +491,7 @@ DWORD WINAPI Map::map_update_function(LPVOID param){
   assert(param);
   Map* p_map= static_cast<Map*>(param);
   DWORD timer_count = 0;
-  INT32 show_count = 0;
+  // INT32 show_count = 0;
   while(p_map->map_update_working){
     // TODO
     timer_count = GetTickCount();
@@ -493,15 +500,10 @@ DWORD WINAPI Map::map_update_function(LPVOID param){
     // OutputDebugString("update all!!!");
     timer_count = GetTickCount() - timer_count;
     if(timer_count < update_velocity) Sleep(update_velocity - timer_count);
-    ++show_count;
-    if(show_count > 80) {
-      p_map->show_map();
-      show_count = 0;
-    }
-    if(p_map->map_update_working == FALSE){
-
-    }
+    // ++show_count;
   }
+  OutputDebugStringW(L"update thread exit");
+  // p_map->map_update_thread_handle = 0;
   return 0;
 }
 
@@ -608,8 +610,8 @@ bool Map::idle_npc_recollect_property_for_stage(NPC& target_npc){
   // assert(target_stage->can_collect());
   if(target_stage->can_collect()){
     // assert(0);
-    return true;
     target_stage->collect();
+    return true;
   }
   return false;
 }

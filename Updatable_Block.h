@@ -3,13 +3,13 @@
 
 #include"sys_header.h"
 #include"macro.h"
-#include"Dis_BLock.h"
+// #include"Dis_BLock.h"
 #define MAX_FILE_READ_BUF_LEN 2048
 #define NUM_LEN 3
 
 extern const WCHAR* global_num_string;
 
-class UpdatableBlock: public DisBlock{
+class UpdatableBlock{// public DisBlock{
 protected:
   INT32 cur_row, cur_col, link_target_row = 0, link_target_col = 0;
   INT32 src_x = 0, src_y = 0;

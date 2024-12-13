@@ -32,6 +32,9 @@ public:
   static gs::Image* prop_image;
   static void Init();
   static void Free();
+
+  static constexpr INT32 prop_iblock_w = 16, prop_iblock_h = 16,
+  prop_image_w = 64, prop_image_h = 16;
 };
 
 

@@ -174,22 +174,35 @@ void Game_Win::gen_new_map(INT32 tree_cnt,INT32 npc_cnt,INT32 chicken_cnt){
 
 Game_Win::~Game_Win(){
   OutputDebugStringA("begin deconstruc game win");
+  assert(BaseWin::b_mutex);
   WaitForSingleObject(BaseWin::b_mutex,INFINITE);
   p_diswin->end_render();
   game_map->end_update();
   ReleaseMutex(BaseWin::b_mutex);
+  assert(thread_handle_cnt == 2);
   WaitForMultipleObjects(thread_handle_cnt,proc_handles,TRUE,INFINITE);
+  // HANDLE wait_handle = p_diswin->get_render_proc_handle();
+  // if(wait_handle){
+  //   WaitForSingleObject(wait_handle, INFINITE);
+  // }
+  // wait_handle = game_map->get_update_proc_handle();
+  // if(wait_handle){
+  //   WaitForSingleObject(wait_handle, INFINITE);
+  // }
+  // buffer
+  Sleep(128);
   OutputDebugStringA("all sub thread exit!!!");
 
   // begin save the data of the game
 
   m_pnpc_set->write_to_file(ar_file_pathes[ar_npc]);
-  m_pchi_set->write_to_file(ar_file_pathes[ar_chi]);
 
   m_ptree_set->write_to_file(ar_file_pathes[ar_tree]);
   m_pwall_set->write_to_file(ar_file_pathes[ar_wall]);
   m_pprop_set->write_to_file(ar_file_pathes[ar_property]);
   m_pstage_set->write_to_file(ar_file_pathes[ar_stage]);
+
+  m_pchi_set->write_to_file(ar_file_pathes[ar_chi]);
 
   game_map->write_to_file(ar_file_pathes[ar_map_type_table]);
   
@@ -241,6 +254,9 @@ void Game_Win::prepare_resource(){
 
   game_map->enable_update();
   p_diswin->enable_render();
+
+  add_thread_rec(game_map->get_update_proc_handle());
+  add_thread_rec(p_diswin->get_render_proc_handle());
 
 
 }

@@ -5,7 +5,7 @@
 #include<vector>
 #include<fstream>
 #include<cassert>
-#include"Dis_BLock.h"
+// #include"Dis_BLock.h"
 namespace gs = Gdiplus;
 class Map;
 class Animal{
@@ -25,13 +25,16 @@ class Animal_Set{
 protected:
   enum AN_SET_STATE{ANI_UPDATED ,ANI_ON_UPDATING, ANI_DRAWN, ANI_ON_DRAWING,
    ANI_NONE_TASK}ani_set_state = ANI_UPDATED;
+  BOOL still_display = TRUE;
 
   std::vector<Ani_T> ani_vector;
 public:
   Animal_Set(){ani_vector.reserve(r_size);}
+  void end_display(){still_display = FALSE;}
+
   Ani_T& operator[](int index){return ani_vector[index];}
   void display_all(gs::Graphics& pg){
-    while(ani_set_state != ANI_UPDATED) Sleep(2);
+    while(ani_set_state != ANI_UPDATED && still_display) Sleep(2);
     ani_set_state = ANI_ON_DRAWING;
     for(auto& it: ani_vector) it.DisplayOnce(pg);
     ani_set_state = ANI_DRAWN;

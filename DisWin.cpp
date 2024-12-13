@@ -123,7 +123,7 @@ void DisWin::render_group(){
   OutputDebugString("begin display stage");
   if(m_pstage_set)  m_pstage_set->display_all(*p_graphics);
   // LOG("display stage");
-  if(m_pprop_set) m_pprop_set->display_all(*p_graphics);
+  if(m_pprop_set ) m_pprop_set->display_all(*p_graphics);
 
   // OutputDebugStringA("begin display npc");
   if(m_pnpc_set) {
@@ -168,9 +168,15 @@ void DisWin::end_render(){
   OutputDebugStringA("begin end render proc");
   if(render_working == FALSE)  return;
   render_working = FALSE;
-  // WaitForSingleObject(render_proc_handle,INFINITE);
-  // render_proc_handle = 0;
-  OutputDebugStringA("end the render proc thread !!!");
+
+  m_ptree_set->end_display();
+  m_pwall_set->end_display();
+  m_pstage_set->end_display();
+  m_pprop_set->end_display();
+
+  m_pnpc_set->end_display();
+  m_pchicken_set->end_display();
+
 }
 
 void DisWin::begin_sel_cut(INT32 bx,INT32 by){
@@ -270,6 +276,8 @@ DWORD WINAPI diswin_render_proc(LPVOID param){
     // OutputDebugStringA("after sleep");
   }
   OutputDebugStringA("render end");
+  OutputDebugStringW(L"render thread exit");
+  // diswin.render_proc_handle = 0;
   return 0;
 }
 

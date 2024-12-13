@@ -11,6 +11,9 @@ class Chicken:public Animal{
 public:
   Chicken():Animal(0,0){}
   Chicken(INT32 px,INT32 py);
+  ~Chicken(){
+    assert(m_direction >=0 && m_direction < 4);
+  }
   void UpdateOnce(Map& pgame_map);
   void DisplayOnce(gs::Graphics& pg);
   void changedirection(int dire);

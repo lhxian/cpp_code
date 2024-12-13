@@ -181,6 +181,19 @@ void NPC::prepare_move(Map& game_map){
   }
 }
 void NPC::move_a_bit(Map& game_map){
+  // TiType_Line* tile_type = game_map.get_map_type_table();
+  // switch(tile_type[cur_row][cur_col][1]){
+  //   case TileType::T_grass:
+  //   break;
+  //   case TileType::T_tree:
+  //   break;
+  //   case TileType::T_wall:
+  //   break;
+  //   case TileType::T_gate:
+  //   break;
+  //   default:
+  //   break;
+  // }
   if(walking_frame_count == NPC::npc_walking_frame_cnt){
     // LOG("curx: %d cury: %d",cur_row,cur_col);
     walking_frame_count=0;
@@ -431,6 +444,52 @@ void NPC::reach_dest(Map& game_map){
     assert(0);
   }
   link_target_row = link_target_col =0;
+}
+
+bool NPC::on_walking(){
+  switch(m_state){
+    case NPC_To_Cut:
+    case NPC_To_Collect_Stage:
+    case NPC_To_Stage_For_Stock_Property:
+    case NPC_To_Pick_Property:
+    case NPC_To_Build:
+    case NPC_To_Stage_Prepare_To_Build_Wall:
+    return true;
+    default:break;
+  }
+  return false;
+}
+void NPC::stop(Map& game_map){
+  assert(link_target_row != cur_row || link_target_col != cur_col);
+  assert(on_walking());
+  assert(link_target_row && link_target_col);
+  TiType_Line* tile_type = game_map.get_map_type_table();
+  TI_Ptr* ptr_table = game_map.get_ptr_table();
+  assert(tile_type[link_target_row][link_target_col][0] == TileType::T_npc_walking);
+  assert(ptr_table[link_target_row][link_target_col][0] == this);
+  switch(tile_type[link_target_row][link_target_col][1]){
+    case TileType::T_tree:{
+      assert(m_state == NPC_To_Cut);
+    }
+    break;
+    case TileType::T_property:
+    assert(m_state == NPC_To_Pick_Property);
+    break;
+    case TileType::T_stage_area:
+    assert(m_state == NPC_To_Collect_Stage || m_state == NPC_To_Stage_Prepare_To_Build_Wall
+    || m_state == NPC_To_Stage_For_Stock_Property);
+    break;
+    case TileType::T_to_build_wall:
+    assert(m_state == NPC_To_Build);
+    break;
+    default:
+    assert(0);
+  }
+  if(tile_type[cur_row][cur_col][0] != TileType::T_grass){
+    
+  }
+  link_target_row = link_target_col = 0;
+  m_state = NPC_Idle;
 }
 
 bool NPC::idle_find_work(Map& game_map){
