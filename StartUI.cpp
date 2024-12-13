@@ -54,6 +54,16 @@ LRESULT CALLBACK UI::UI_proc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam){
       SetWindowLongPtr(hwnd,GWLP_USERDATA,
       reinterpret_cast<LONG_PTR>(p_struc->lpCreateParams));
     }break;
+
+    case WM_SYSCOMMAND:{
+      switch(wparam){
+        case SC_CLOSE:{
+          PostQuitMessage(0);
+        }break;
+        default:
+        break;
+      }
+    }break;
     default:
     return DefWindowProc(hwnd,msg,wparam,lparam);
   }

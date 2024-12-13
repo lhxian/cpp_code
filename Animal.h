@@ -56,6 +56,7 @@ public:
   void write_to_file(const char* file_name){
     std::ofstream ofs(file_name,std::ios::out | std::ios::binary);
     size_t set_size = ani_vector.size();
+    for(auto& it: ani_vector) assert(it.m_direction >=0 && it.m_direction < 4);
     ofs.write(reinterpret_cast<const char*>(&set_size),sizeof(size_t));
     ofs.write(reinterpret_cast<const char*>(ani_vector.data()),set_size * sizeof(Ani_T));
     ofs.close();
@@ -72,6 +73,7 @@ public:
 
     ani_vector.resize(set_size);
     ifs.read(reinterpret_cast<char*>(ani_vector.data()),set_size * sizeof(Ani_T));
+    for(auto& it: ani_vector) assert(it.m_direction >=0 && it.m_direction < 4);
     ifs.close();
   }
 };

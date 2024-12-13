@@ -109,6 +109,7 @@ void Chicken::moveAgrid(Map& game_map){
 }
 
 void Chicken::changedirection(int dire){
+  assert(dire < 4 && dire >=0);
   m_direction = dire;
   assert(m_direction >=0 && m_direction < 4);
   row += dires[m_direction][0], col += dires[m_direction][1];
