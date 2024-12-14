@@ -1,4 +1,4 @@
-#include"all.h"
+// #include"all.h"
 #include"constv.h"
 #include"Map.h"
 #include"Chicken.h"
@@ -67,9 +67,9 @@ void Chicken::UpdateOnce(Map& game_map){
   if(still == 0){
     OutputDebugString("chicken begin change x");
     
-    char num[16];
-    sprintf(num,"%d",m_direction);
-    OutputDebugString(num);
+    // char num[16];
+    // sprintf(num,"%d",m_direction);
+    // OutputDebugString(num);
     assert(m_direction < 4 && m_direction >=0);
     disrect.X += disrect_move_dires[m_direction][0],
     OutputDebugString("chicken begin change y");

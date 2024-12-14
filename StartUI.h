@@ -22,9 +22,12 @@
 #define DIS_RECT_H (UI_H - UI_BUTTON_H)
 
 class Game_Win;
+class SelectWin;
+
 class UI:public BaseWin{
 protected:
   Game_Win* m_game_win = NULL;
+  SelectWin* m_sel_win = NULL;
 public:
   enum USER_SEL{
     EXIT,NEW,CONTINUE
@@ -35,8 +38,9 @@ public:
   // UI(USER_SEL* return_res);
   UI();
   ~UI();
-  void new_game();
+  void new_game(INT32 m_tree,INT32 m_npc,INT32 m_chicken);
   void continue_last_game();
+  void new_sel_win();
 
   // static constexpr INT32 UI_w = 400,UI_h = 400;
   static WNDCLASS ui_win_class ;

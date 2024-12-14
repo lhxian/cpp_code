@@ -91,9 +91,11 @@ void T_SET<T,r_size>::load_from_file(const char* file_name){
   assert(ifs.is_open());
   size_t set_size = 0;
   ifs.read(reinterpret_cast<char*>(&set_size),sizeof(size_t));
+  #ifdef DEBUG
   char num[16];
   sprintf(num,"%zu",set_size);
   OutputDebugString(num);
+  #endif
   set_vector.resize(set_size);
   ifs.read(reinterpret_cast<char*>(set_vector.data()),set_size * sizeof(T));
   ifs.close();

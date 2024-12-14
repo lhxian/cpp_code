@@ -4,6 +4,9 @@
 #include"all.h"
 #include"Chicken.h"
 #define MAX_HANDLE_CNT 4
+#define DEF_TREE_NUM 256
+#define DEF_NPC_NUM 32
+#define DEF_CHICKEN_NUM 4
 
 class Game_Win:public BaseWin{
   // char ch[32];
@@ -25,9 +28,10 @@ class Game_Win:public BaseWin{
 
 public:
   Game_Win() = delete;
-  Game_Win(bool laodfrom_file = false);
+  Game_Win(bool load_from_file = false,INT32 tree_cnt = DEF_TREE_NUM, INT32 npc_cnt = DEF_NPC_NUM,
+  INT32 chi_cnt = DEF_CHICKEN_NUM);
   ~Game_Win();
-  void gen_new_map(INT32 tree_cnt = 256, INT32 ncp_cnt = 4,INT32 chicken_cnt = 4);
+  void gen_new_map(INT32 tree_cnt , INT32 ncp_cnt ,INT32 chicken_cnt);
   bool Load_from_file();
   void create_interface();
   void prepare_resource();

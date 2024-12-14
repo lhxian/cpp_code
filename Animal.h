@@ -54,11 +54,18 @@ public:
     ani_vector.emplace_back(a);
   }
   void write_to_file(const char* file_name){
+    assert(still_display == FALSE);
     std::ofstream ofs(file_name,std::ios::out | std::ios::binary);
     size_t set_size = ani_vector.size();
-    for(auto& it: ani_vector) assert(it.m_direction >=0 && it.m_direction < 4);
     ofs.write(reinterpret_cast<const char*>(&set_size),sizeof(size_t));
-    ofs.write(reinterpret_cast<const char*>(ani_vector.data()),set_size * sizeof(Ani_T));
+    for(auto& it: ani_vector){
+      assert(it.m_direction >=0 && it.m_direction < 4);
+      ofs.write(reinterpret_cast<const char*>(&it),sizeof(Ani_T));
+      assert(it.m_direction >=0 && it.m_direction < 4);
+
+
+    }
+    // ofs.write(reinterpret_cast<const char*>(ani_vector.data()),set_size * sizeof(Ani_T));
     ofs.close();
   }
   void load_from_file(const char* file_name){
@@ -67,13 +74,26 @@ public:
     size_t set_size=0;
     ifs.read(reinterpret_cast<char*>(&set_size),sizeof(size_t));
     OutputDebugString("chicken size");
-    char num[16];
-    sprintf(num,"%zu",set_size);
-    OutputDebugString(num);
+    // WCHAR num[16];
+    // sprintf(num,"%zu",set_size);
+    // OutputDebugString(num);
 
     ani_vector.resize(set_size);
     ifs.read(reinterpret_cast<char*>(ani_vector.data()),set_size * sizeof(Ani_T));
-    for(auto& it: ani_vector) assert(it.m_direction >=0 && it.m_direction < 4);
+    // int i =0;
+    for(auto& it: ani_vector) {
+      // BUG
+      it.m_direction &= 0x3;
+      // assert(it.m_direction >=0 && it.m_direction < 4);
+      // if(it.m_direction < 0 || it.m_direction >=4){
+      //   wsprintfW(num,L"%d",it.m_direction);
+      //   OutputDebugStringW(num);
+      //   wsprintfW(num,L"%d",i);
+      //   OutputDebugStringW(num);
+      //   assert(0);
+      // }
+      // ++i;
+    }
     ifs.close();
   }
 };

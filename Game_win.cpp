@@ -1,5 +1,4 @@
 // #include<iostream>
-#include<fstream>
 
 #include"Map.h"
 #include"Tree.h"
@@ -45,7 +44,7 @@ LRESULT CALLBACK Game_Win::game_win_proc(HWND hwnd ,UINT msg,WPARAM wparam,LPARA
       assert(p_game_win);
       HWND diswin = p_game_win->p_diswin->GetHwnd();
       assert(diswin);
-      switch(wparam){
+      switch(LOWORD(wparam)){
         case ID_CUT_SEL:OutputDebugString("click the cut sel!!!");
         LOG("click the cut button");
         // SendMessage(p_game_win->p_diswin->GetHwnd(),WM_USER_CUT_TREE,0,0);
@@ -107,7 +106,7 @@ void Game_Win::Close_Game_win(){
 
 // constructor
 
-Game_Win::Game_Win(bool load_from_file){
+Game_Win::Game_Win(bool load_from_file,INT32 tree_cnt , INT32 npc_cnt ,INT32 chi_cnt){
 
   create_interface();
   ShowWindow(hwnd,BaseWin::cmdShow);
@@ -135,7 +134,7 @@ Game_Win::Game_Win(bool load_from_file){
     m_pstage_set->load_from_file(ar_file_pathes[ar_stage]);
   }else{
     OutputDebugString("begin gen new map");
-    gen_new_map();
+    gen_new_map(tree_cnt,npc_cnt,chi_cnt);
   }
 
   prepare_resource();
@@ -201,7 +200,7 @@ Game_Win::~Game_Win(){
   m_pwall_set->write_to_file(ar_file_pathes[ar_wall]);
   m_pprop_set->write_to_file(ar_file_pathes[ar_property]);
   m_pstage_set->write_to_file(ar_file_pathes[ar_stage]);
-
+  OutputDebugStringW(L"begin write the chicken data");
   m_pchi_set->write_to_file(ar_file_pathes[ar_chi]);
 
   game_map->write_to_file(ar_file_pathes[ar_map_type_table]);

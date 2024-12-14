@@ -1,7 +1,8 @@
-#include"all.h"
+// #include"all.h"
 #include"StartUI.h"
 #include"Init.h"
 #include"Game_win.h"
+#include"SelectUI.h"
 
 
 const CHAR* ui_type[]={
@@ -29,18 +30,18 @@ LRESULT CALLBACK UI::UI_proc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam){
   switch(msg){
 
     case WM_COMMAND:{
-      switch(wparam){
+      switch(LOWORD(wparam)){
         case ID_UI_EXIT: PostQuitMessage(0);break;
 
         case ID_UI_NEW:{
-          // if(MessageBox(NULL,"this operation will purge you game data !!!","info",
-          // MB_OKCANCEL) == IDCANCEL) break;
+          if(MessageBox(NULL,"this operation will purge you data !!!","info",
+          MB_OKCANCEL) == IDCANCEL) break;
           
         }
         case ID_UI_CONTINUE:{
           UI* app_ui = reinterpret_cast<UI*>(GetWindowLongPtr(hwnd,GWLP_USERDATA));
           assert(app_ui);
-          if(wparam == ID_UI_NEW) app_ui->new_game();
+          if(wparam == ID_UI_NEW) app_ui->new_sel_win();
           else app_ui->continue_last_game();
           app_ui->user_play = TRUE;
         }break;
@@ -61,7 +62,7 @@ LRESULT CALLBACK UI::UI_proc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam){
           PostQuitMessage(0);
         }break;
         default:
-        break;
+        return DefWindowProc(hwnd,msg,wparam,lparam);
       }
     }break;
     default:
@@ -111,14 +112,15 @@ UI::~UI(){
   }
 }
 
-void UI::new_game(){
+void UI::new_game(INT32 m_npc,INT32 m_tree,INT32 m_chicken){
   // TODO
   
-  DestroyWindow(hwnd);hwnd = 0;
+  if(hwnd) DestroyWindow(hwnd);hwnd = 0;
   OutputDebugString("new a game win!!!");
   Init_Game();
+  // m_sel_win = new SelectWin(this);
 
-  m_game_win = new Game_Win(false);
+  m_game_win = new Game_Win(false,m_npc,m_tree,m_chicken);
 }
 void UI::continue_last_game(){
   // TODO
@@ -129,4 +131,10 @@ void UI::continue_last_game(){
   }
   DestroyWindow(hwnd); hwnd =0;
   m_game_win = new Game_Win(true);
+}
+
+void UI::new_sel_win(){
+  SelectWin::Init_SelWin();
+  DestroyWindow(hwnd); hwnd = 0;
+  m_sel_win = new SelectWin(this);
 }
