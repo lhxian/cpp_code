@@ -52,7 +52,7 @@ void DisWin::Quit_diswin(){
 // constructor
 DisWin::DisWin(INT32 x,INT32 y,INT32 w,INT32 h,HWND parent,HMENU id):
 m_x(x),m_y(y),m_w(w),m_h(h),m_id(id),
-m_pen(gs::Color::DarkBlue),m_solidBrush(0xffff'ffff),
+m_pen(gs::Color::DarkBlue,2.f),m_solidBrush(0xffff'ffff),
 m_pnpc_set(NULL),render_working(FALSE)
 {
   DWORD style = (parent)? WS_CHILD | WS_VISIBLE | WS_BORDER : WS_OVERLAPPEDWINDOW;
@@ -257,7 +257,7 @@ DWORD WINAPI diswin_render_proc(LPVOID param){
   OutputDebugStringA("render proc begin");
   while(diswin.render_working){
     time_rec = GetTickCount();
-    assert(BaseWin::b_mutex);
+    // assert(BaseWin::b_mutex);
     // WaitForSingleObject(BaseWin::b_mutex,INFINITE);
     // OutputDebugStringA("loop");
     diswin.clear();
@@ -270,10 +270,21 @@ DWORD WINAPI diswin_render_proc(LPVOID param){
     // ReleaseMutex(BaseWin::b_mutex);
     // OutputDebugStringA("release mutex");
     // LOG("render");
+    ++diswin.frame_cnt;
     time_rec = GetTickCount() - time_rec;
-    if(time_rec +8 < update_velocity)  Sleep(update_velocity -8 - time_rec);
+    if(time_rec +8 < update_velocity)  {
+      Sleep(update_velocity -8 - time_rec);
+      diswin.time_elapse += update_velocity;
+    }
+    else{
+      diswin.time_elapse += time_rec;
+    }
+    if(diswin.time_elapse >= 1000){
+      diswin.caculate_fps();
+    }
     // Sleep(8);
     // OutputDebugStringA("after sleep");
+
   }
   OutputDebugStringA("render end");
   OutputDebugStringW(L"render thread exit");

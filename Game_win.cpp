@@ -1,5 +1,4 @@
 // #include<iostream>
-
 #include"Map.h"
 #include"Tree.h"
 #include"Game_win.h"
@@ -61,11 +60,21 @@ LRESULT CALLBACK Game_Win::game_win_proc(HWND hwnd ,UINT msg,WPARAM wparam,LPARA
         case ID_WALL_SEL:
         SendMessage(diswin,WM_USER_WALL,0,0);
         break;
+
         
         default:
         LOG("game win proc command exception: %lld",wparam);
         assert(0);
       }
+    }break;
+
+    case WM_USER_FPS:{
+      HWND fps_win = GetDlgItem(hwnd,ID_WINDOW_FPS);
+      assert(fps_win);
+      Game_Win* p_game_win =reinterpret_cast<Game_Win*>(GetWindowLongPtr(hwnd,GWLP_USERDATA));
+      assert(p_game_win);
+      p_game_win->translate_fps_to_char(wparam);
+      SetWindowText(fps_win,p_game_win->fps_ch);
     }break;
 
     case WM_CREATE:{
@@ -266,6 +275,9 @@ void Game_Win::create_interface(){
   OutputDebugStringA("create game win");
   assert(hwnd);
   OutputDebugStringA("create the main window!!!");
+  // create the fps display
+  CreateWindow("STATIC","fps: ",WS_CHILD | WS_VISIBLE | SS_LEFT,B_POS_X,B_POS_WALL_Y + 128,BUTTON_W,
+  BUTTON_H,hwnd,(HMENU)ID_WINDOW_FPS,BaseWin::process_inst,NULL);
   // create butttons
   //
   CreateWindow("Button","cut",WS_CHILD | WS_VISIBLE,B_POS_X,B_POS_CUT_SEL_Y,
@@ -307,4 +319,17 @@ void Game_Win::test(){
 
 void Game_Win::add_thread_rec(HANDLE proc_handle){
   proc_handles[thread_handle_cnt++] = proc_handle;
+}
+
+void Game_Win::translate_fps_to_char(WPARAM pfps){
+  int cnt = 0;
+  while(pfps){
+    sta[++cnt] = pfps % 10 + '0';
+    pfps /= 10;
+  }
+  char* fill_ptr = fps_ch + 5;
+  while(cnt){
+    *fill_ptr++ = sta[cnt--];
+  }
+  *fill_ptr = '\0';
 }

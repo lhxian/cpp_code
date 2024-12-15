@@ -53,6 +53,7 @@ protected:
   Stage_Set* m_pstage_set = NULL;
 
   BOOL render_working;// on_sel = FALSE;
+  INT32 time_elapse = 0, frame_cnt = 0,fps=0;
 
   static WNDCLASS diswin_share_class;
 public:
@@ -65,6 +66,12 @@ public:
   }
   gs::SolidBrush& get_brush(){return m_solidBrush;}
   gs::Pen& get_pen(){return m_pen;}
+
+  void caculate_fps(){
+    fps = frame_cnt;
+    time_elapse = frame_cnt = 0;
+    SendMessage(GetParent(hwnd),WM_USER_FPS,static_cast<WPARAM>(fps),0);
+  }
 
   void enable_render();
   void end_render();

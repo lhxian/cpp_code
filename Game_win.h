@@ -8,6 +8,8 @@
 #define DEF_NPC_NUM 32
 #define DEF_CHICKEN_NUM 4
 
+#define ID_WINDOW_FPS 0xf9
+
 class Game_Win:public BaseWin{
   // char ch[32];
   DisWin* p_diswin = NULL;
@@ -23,6 +25,8 @@ class Game_Win:public BaseWin{
 
   HANDLE proc_handles[MAX_HANDLE_CNT];
   DWORD thread_handle_cnt = 0;
+  
+  CHAR fps_ch[32]="fps: ",sta[16];
 
 
 
@@ -37,6 +41,8 @@ public:
   void prepare_resource();
   void test();
   void add_thread_rec(HANDLE thread_handle = 0);
+
+  void translate_fps_to_char(WPARAM p_fps);
 
 
   static void Init_Game_win();

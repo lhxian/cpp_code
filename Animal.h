@@ -17,6 +17,8 @@ public:
   Animal() = delete;
   Animal(INT32 prow,INT32 pcol):
   row(prow),col(pcol),an_frame_count(0){}
+  INT32 get_row(){return row;}
+  INT32 get_col(){return col;}
 };
 
 #define AnT_h
@@ -74,9 +76,9 @@ public:
     size_t set_size=0;
     ifs.read(reinterpret_cast<char*>(&set_size),sizeof(size_t));
     OutputDebugString("chicken size");
-    // WCHAR num[16];
-    // sprintf(num,"%zu",set_size);
-    // OutputDebugString(num);
+    WCHAR num[16];
+    wsprintfW(num,L"size:%d",set_size);
+    OutputDebugStringW(num);
 
     ani_vector.resize(set_size);
     ifs.read(reinterpret_cast<char*>(ani_vector.data()),set_size * sizeof(Ani_T));
@@ -84,6 +86,10 @@ public:
     for(auto& it: ani_vector) {
       // BUG
       it.m_direction &= 0x3;
+      wsprintfW(num,L"%d",it.get_row());
+      OutputDebugStringW(num);
+      wsprintfW(num,L"%d",it.get_col());
+      OutputDebugStringW(num);
       // assert(it.m_direction >=0 && it.m_direction < 4);
       // if(it.m_direction < 0 || it.m_direction >=4){
       //   wsprintfW(num,L"%d",it.m_direction);

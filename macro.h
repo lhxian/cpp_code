@@ -3,7 +3,7 @@
 
 // npc default vector reserve size
 #define DEF_NPC_R_SIZE 64
-#define update_velocity 36
+#define update_velocity 32
 #define MOVING_VELOCITY 2
 
 //resource parent path
@@ -143,6 +143,7 @@ typedef void* TI_Ptr[AA_MAP_WC][2];
 #define WM_USER_PAINT_BUTTON (WM_USER + 0x7)
 // reset the button's status
 #define WM_USER_RESET_BUTTON (WM_USER + 0x8)
+#define WM_USER_FPS (WM_USER + 0x9)
 
 
 // subwindow's ids

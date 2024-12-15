@@ -79,6 +79,9 @@ LRESULT CALLBACK SelectWin::Select_proc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM 
       CreateWindow("BUTTON","8",WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | SS_LEFT,
       SEL_X2,P_SEL_CHICKEN_Y,SEL_W,SEL_H,hwnd,(HMENU)S_CHI_ID_3,BaseWin::process_inst,NULL);
 
+      CreateWindow("BUTTON","16",WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | SS_LEFT,
+      SEL_X3,P_SEL_CHICKEN_Y,SEL_W,SEL_H,hwnd,(HMENU)S_CHI_ID_4,BaseWin::process_inst,NULL);
+
       CreateWindow("BUTTON","OK",WS_CHILD | WS_VISIBLE,P_CLUE_X,P_SEL_CHICKEN_Y + 40,80,30,hwnd,
       (HMENU)S_ID_OK,BaseWin::process_inst,NULL);
 

@@ -17,6 +17,7 @@
 #define S_CHICKEN_ID 0x3000
 #define S_CHI_ID_2 (S_CHICKEN_ID + (1<<2))
 #define S_CHI_ID_3 (S_CHICKEN_ID + (1<<3))
+#define S_CHI_ID_4 (S_CHICKEN_ID + (1<<4))
 
 #define S_ID_OK 0x4000
 // window layout
