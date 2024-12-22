@@ -52,7 +52,7 @@ void DisWin::Quit_diswin(){
 // constructor
 DisWin::DisWin(INT32 x,INT32 y,INT32 w,INT32 h,HWND parent,HMENU id):
 m_x(x),m_y(y),m_w(w),m_h(h),m_id(id),
-m_pen(gs::Color::DarkBlue,2.f),m_solidBrush(0xffff'ffff),
+m_pen(gs::Color::DarkBlue,1.5f),m_solidBrush(0xffff'ffff),
 m_pnpc_set(NULL),render_working(FALSE)
 {
   DWORD style = (parent)? WS_CHILD | WS_VISIBLE | WS_BORDER : WS_OVERLAPPEDWINDOW;

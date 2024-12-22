@@ -5,6 +5,7 @@
 #include<vector>
 #include<fstream>
 #include<cassert>
+#include<cstring>
 // #include"Dis_BLock.h"
 namespace gs = Gdiplus;
 class Map;
@@ -32,6 +33,9 @@ protected:
   std::vector<Ani_T> ani_vector;
 public:
   Animal_Set(){ani_vector.reserve(r_size);}
+  ~Animal_Set(){
+    OutputDebugStringW(L"destruct the animal set");
+  }
   void end_display(){still_display = FALSE;}
 
   Ani_T& operator[](int index){return ani_vector[index];}
@@ -59,37 +63,46 @@ public:
     assert(still_display == FALSE);
     std::ofstream ofs(file_name,std::ios::out | std::ios::binary);
     size_t set_size = ani_vector.size();
+    // WCHAR num[32];
+    // wsprintfW(num,L"buf write size %d",set_size * sizeof(Ani_T));
+    // OutputDebugStringW(num);
     ofs.write(reinterpret_cast<const char*>(&set_size),sizeof(size_t));
-    for(auto& it: ani_vector){
-      assert(it.m_direction >=0 && it.m_direction < 4);
-      ofs.write(reinterpret_cast<const char*>(&it),sizeof(Ani_T));
-      assert(it.m_direction >=0 && it.m_direction < 4);
+    ofs.write(reinterpret_cast<const char*>(ani_vector.data()),set_size * sizeof(Ani_T));
+    OutputDebugStringW(L"write the chicken data to file");
+    // for(auto& it: ani_vector){
+    //   assert(it.m_direction >=0 && it.m_direction < 4);
+    //   ofs.write(reinterpret_cast<const char*>(&it),sizeof(Ani_T));
+    //   assert(it.m_direction >=0 && it.m_direction < 4);
 
 
-    }
+    // }
     // ofs.write(reinterpret_cast<const char*>(ani_vector.data()),set_size * sizeof(Ani_T));
     ofs.close();
   }
   void load_from_file(const char* file_name){
-    std::ifstream ifs(file_name);
+    std::ifstream ifs(file_name,std::ios::in | std::ios::binary);
     assert(ifs.is_open());
     size_t set_size=0;
     ifs.read(reinterpret_cast<char*>(&set_size),sizeof(size_t));
     OutputDebugString("chicken size");
-    WCHAR num[16];
-    wsprintfW(num,L"size:%d",set_size);
-    OutputDebugStringW(num);
+    // WCHAR num[32];
+    // wsprintfW(num,L"size:%d",set_size);
+    // OutputDebugStringW(num);
 
     ani_vector.resize(set_size);
-    ifs.read(reinterpret_cast<char*>(ani_vector.data()),set_size * sizeof(Ani_T));
+    auto read_count = ifs.read(reinterpret_cast<char*>(ani_vector.data()),set_size * sizeof(Ani_T)).gcount();
+    // wsprintfW(num,L"read count:%d sizeof T %d",read_count,sizeof(Ani_T));
+    // OutputDebugStringW(num);
+    assert(read_count == set_size * sizeof(Ani_T));
+
     // int i =0;
     for(auto& it: ani_vector) {
       // BUG
       it.m_direction &= 0x3;
-      wsprintfW(num,L"%d",it.get_row());
-      OutputDebugStringW(num);
-      wsprintfW(num,L"%d",it.get_col());
-      OutputDebugStringW(num);
+      // wsprintfW(num,L"%d",it.get_row());
+      // OutputDebugStringW(num);
+      // wsprintfW(num,L"%d",it.get_col());
+      // OutputDebugStringW(num);
       // assert(it.m_direction >=0 && it.m_direction < 4);
       // if(it.m_direction < 0 || it.m_direction >=4){
       //   wsprintfW(num,L"%d",it.m_direction);
