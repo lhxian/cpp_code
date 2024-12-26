@@ -3,7 +3,7 @@ setlocal enabledelayedexpansion
 
 set /a total_lines=0
 
-for %%f in (*.cpp *.h) do (
+for %%f in (src/*.cpp include/*.h) do (
     set /a file_lines=0
     for /f %%l in ('type "%%f" ^| find /c /v ""') do (
         set /a file_lines=%%l
@@ -15,3 +15,6 @@ for %%f in (*.cpp *.h) do (
 echo Total lines in .cpp and .h files: %total_lines%
 endlocal
 @REM pause
+
+@echo off
+setlocal enabledelayedexpansion

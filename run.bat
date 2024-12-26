@@ -1,3 +1,3 @@
 @echo off
-.\build\Debug\main.exe
+.\main_debug.exe
 echo exit code: %ERRORLEVEL%
